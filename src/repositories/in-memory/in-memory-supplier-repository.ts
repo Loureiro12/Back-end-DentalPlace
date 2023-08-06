@@ -6,6 +6,16 @@ import { SupplierRepository } from '../supplier-repository'
 export class InMemorySupplierRepository implements SupplierRepository {
   public items: Supplier[] = []
 
+  async findByCnpj(cnpj: string) {
+    const supplier = this.items.find((item) => item.cnpj === cnpj)
+
+    if (!supplier) {
+      return null
+    }
+
+    return supplier
+  }
+
   async create(data: Prisma.SupplierUncheckedCreateInput) {
     const supplier = {
       id: randomUUID(),

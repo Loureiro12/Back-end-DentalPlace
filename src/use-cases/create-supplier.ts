@@ -1,6 +1,7 @@
 import { Supplier } from '@prisma/client'
 
 import { SupplierRepository } from '@/repositories/supplier-repository'
+import { SupplierAlreadyExistsError } from './errors/supplier-already-exists-error'
 
 interface CreateSupplierCaseRequest {
   name: string
@@ -20,6 +21,12 @@ export class CreateSupplierCase {
     phone,
     cnpj,
   }: CreateSupplierCaseRequest): Promise<CreateSupplierCaseResponse> {
+    const findSupplier = await this.supplierRepository.findByCnpj(cnpj)
+
+    if (findSupplier) {
+      throw new SupplierAlreadyExistsError()
+    }
+
     const supplier = await this.supplierRepository.create({
       name,
       phone,
