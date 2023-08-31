@@ -33,6 +33,11 @@ export async function authenticate(
     )
 
     return reply.status(200).send({
+      user: {
+        ...user,
+        password_hash: undefined,
+        created_at: undefined,
+      },
       token,
     })
   } catch (err) {

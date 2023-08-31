@@ -6,6 +6,16 @@ import { ProductRepository } from '../product-repository'
 export class InMemoryProductsRepository implements ProductRepository {
   public items: Product[] = []
 
+  async list(page: number) {
+    return this.items.slice((page - 1) * 20, page * 20)
+  }
+
+  async searchMany(query: string, page: number) {
+    return this.items
+      .filter((item) => item.name.includes(query))
+      .slice((page - 1) * 20, page * 20)
+  }
+
   async create(data: Prisma.ProductUncheckedCreateInput) {
     const product = {
       id: randomUUID(),
